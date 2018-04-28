@@ -225,7 +225,7 @@ grafo* algoritmo_prim(grafo* g, int partida, int m)
 	heap* hp;
 	adj_lista* arestas;
 	adj_lista* min_aresta;
-	int i;
+	int adicionados = 1;
 
 	arestas = g->vertices[partida];
 	hp = criar_heap(m+1);
@@ -236,12 +236,13 @@ grafo* algoritmo_prim(grafo* g, int partida, int m)
 		arestas = arestas->prox;
 	}
 
-	while(!heap_vazia(hp))
+	while(adicionados < g->tamanho)
 	{
 		min_aresta = dequeue(hp);
 		/*Se o vertice a ser adicionado ainda não está na árvore, evita formar ciclos*/
 		if(ACM->vertices[min_aresta->vertice] == NULL)
 		{
+			adicionado+=1;
 			adicionar_vertice(ACM, min_aresta->origem, min_aresta->vertice, min_aresta->custo);
 			arestas = g->vertices[min_aresta->vertice];
 			while(arestas != NULL)//Adiciona as arestas deste novo vertice
