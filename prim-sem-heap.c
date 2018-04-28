@@ -49,7 +49,7 @@ void print_fila(fila* fp);
 
 int main()
 {
-	//Algum código pra usar a ACM
+	//algum código aqui
 	return 0;
 
 }
@@ -174,7 +174,7 @@ grafo* algoritmo_prim(grafo* g, int partida)
 			arestas = arestas->prox;
 		}
 
-		print_fila(fp);
+		//print_fila(fp);
 		min_aresta = dequeue(fp);
 
 		while(ACM->vertices[min_aresta->vertice]!= NULL)//Se a aresta que liga ao vertice que se deseja adicionar já está na arvore
