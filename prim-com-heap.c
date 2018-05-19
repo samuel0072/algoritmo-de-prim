@@ -39,7 +39,7 @@ void print_g(grafo* g);
 adj_lista* adicionar_adj_lista(int vertice, int origem, int custo);
 
 //g é o grafo a ser feita a MST, partida é o vertice inicial, m é o tamanho da heap, retorna a MST de G
-grafo* algoritmo_prim(grafo* g, int partida, int m);
+grafo* algoritmo_prim(grafo* g, int partida);
 
 /*FUNCOES PARA A HEAP MÍNIMA*/
 
@@ -219,38 +219,40 @@ adj_lista* adicionar_adj_lista(int vertice, int origem, int custo)
 	return novo;
 }
 
-grafo* algoritmo_prim(grafo* g, int partida, int m)
+grafo* algoritmo_prim(grafo* g, int partida)
 {
 	grafo* ACM = criar_grafo(g->tamanho);
-	heap* hp;
-	adj_lista* arestas;
+	heap* hp;//heap mínima
+	adj_lista* arestas;//As arestas que vão ser colocadas na heap
 	adj_lista* min_aresta;
-	int adicionados = 1;
+	int adicionados = 1;//O vértice de partida já está na árvore
 
-	arestas = g->vertices[partida];
-	hp = criar_heap(m+1);
-	/*Adiciona as arestas do vertice de partida na heap*/
-	while(arestas != NULL)
-	{
-		enqueue(hp, arestas);
-		arestas = arestas->prox;
-	}
+	arestas = g->vertices[partida];//Pega as arestas do vertice de partida da árvore
+								   //Esse é o primeiro vértice a ser colocado na árvore
+	hp = criar_heap(100);			
 
-	while(adicionados < g->tamanho)
-	{
-		min_aresta = dequeue(hp);
-		/*Se o vertice a ser adicionado ainda não está na árvore, evita formar ciclos*/
-		if(ACM->vertices[min_aresta->vertice] == NULL)
-		{
-			adicionado+=1;
-			adicionar_vertice(ACM, min_aresta->origem, min_aresta->vertice, min_aresta->custo);
-			arestas = g->vertices[min_aresta->vertice];
-			while(arestas != NULL)//Adiciona as arestas deste novo vertice
-			{
-				if(ACM->vertices[arestas->vertice] == NULL)//Não adiciona arestas que possam causar ciclos
-					enqueue(hp, arestas);
-				arestas = arestas->prox;
-			}
+	while(adicionados < g->tamanho)//Esse while não se repete g->tamanho vezes por que 
+	{							   //nem sempre uma aresta vai ser colocada na árvore
+								   //Pode-se dizer que no máximo ele se repete E(arestas) vezes
+		while(arestas != NULL)
+		{//enfileira as arestas(do grafo g) do vértice que acabou de ser colocado na árvore
+			enqueue(hp, arestas);
+			arestas = arestas->prox;
+		}
+		min_aresta = dequeue(hp);//Pega a aresta que tem custo mínimo atual
+
+		if(ACM->vertices[min_aresta->vertice] == NULL)//Verifica se a aresta é segura, ou seja,
+		{											   //se ela não vai formar ciclos na árvore
+			adicionado+=1;							  //mas nem todas arestas são seguras, esse é o motivo do while não se repetir g->tamanho vezes
+			
+			adicionar_vertice(ACM, min_aresta->origem,//min_aresta->origem e min_aresta->vertice são os
+			 min_aresta->vertice, min_aresta->custo); //vértices que essa aresta conecta
+													  //min_aresta->origem já está na árvore
+													  //min_aresta->vertice acabou de ser colocado na árvore
+													  //min_aresta->origem seria como o vértice que teve de ser
+													  //colocado na árvore para se chegar a min_aresta->vertice
+			]
+			arestas = g->vertices[min_aresta->vertice];//Pega as arestas do vértice que acabou de ser colocado na árvore
 		}
 
 	}
